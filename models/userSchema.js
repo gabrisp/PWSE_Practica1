@@ -13,13 +13,14 @@ const UserScheme = new mongoose.Schema(
         },
         password: String,
         role: {
-            type: ['user', 'admin'],
+            type: String,
+            enum: ['user', 'admin'],
             default: 'user'
         },
         verificationCode: Number,
-        isVerified: {
-            type: Boolean,
-            default: false
+        status: {
+            type: Number,
+            default: 0
         },
         attempts: {
             type: Number,

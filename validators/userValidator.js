@@ -12,6 +12,13 @@ const validateCreateUser = [
     }
 ]
 
+const validateVerifyUser = [
+    check('code').exists().notEmpty().isNumeric().isLength({ min: 6, max: 6 }),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
+
 const validateLoginUser = [
     check('email').exists().isEmail().withMessage('El email no es valido'),
     check('password').exists().isString().isLength({min: 8}).withMessage('La contraseña debe tener al menos 8 caracteres'),
@@ -20,4 +27,5 @@ const validateLoginUser = [
     }
 ]
 
-module.exports = { validateCreateUser, validateLoginUser }
+
+module.exports = { validateCreateUser, validateVerifyUser, validateLoginUser }
