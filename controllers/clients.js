@@ -6,12 +6,12 @@ const createClient = async (req, res) => {
 }
 
 const getClients = async (req, res) => {
-    const clients = await Client.find({where: {user: req.user._id}});
+    const clients = await Client.find().where({user: req.user._id});
     res.status(200).json(clients);
 }
 
 const getClientById = async (req, res) => {
-    const client = await Client.findById(req.params.id, {where: {user: req.user._id}});
+    const client = await Client.findById(req.params.id).where({user: req.user._id});
     if (!client) {
         return res.status(404).json({ message: 'Cliente no encontrado' });
     }

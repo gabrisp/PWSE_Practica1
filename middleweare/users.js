@@ -1,14 +1,32 @@
-
 const User = require('../models/userSchema');
 const { handleHttpError } = require('../utils/handleHttpError');
 
 const registerMiddleware = async (req, res, next) => {
-    const existingUser = await User.findOne({ email: req.body.email });
-    if (existingUser) {
-        handleHttpError(res, 'Usuario ya existe', 403);
+    try {
+        const existingUser = await User.findOne({ email: req.body.email });
+        if (existingUser) {
+                return handleHttpError(res, 'Email ya esta en uso', 403);
+        }
+        // If no existing user, proceed to the next middleware
+        next();
+    } catch (error) {
+        return handleHttpError(res, 'Usuario ya existe', 500);
     }
-    next(); 
 };
+
+const finishRegisterMiddleware = async (req, res, next) => {
+    try {
+        const existingUser = await User.findOne({ email: req.body.email });
+        // Comprobar si el usuario existente es diferente del usuario logueado
+        if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+            return handleHttpError(res, 'No se puede cambiar el email, ya que pertenece a otro usuario', 403);
+        }
+        // Si no hay usuario existente o es el mismo, proceder
+        next();
+    } catch (error) {
+        return handleHttpError(res, 'Usuario ya existe', 500);
+    }
+}
 
 const verifyMiddleware = async (req, res, next) => {
 
@@ -31,4 +49,4 @@ const verifyMiddleware = async (req, res, next) => {
 
 }
 
-module.exports = { registerMiddleware, verifyMiddleware }
+module.exports = { registerMiddleware, verifyMiddleware, finishRegisterMiddleware }

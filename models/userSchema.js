@@ -6,7 +6,9 @@ const UserScheme = new mongoose.Schema(
 
     {
         name: String,
+        surnames: String,
         age: Number,
+        nif: String,
         email: {
             type: String,
             unique: true
@@ -26,6 +28,19 @@ const UserScheme = new mongoose.Schema(
             type: Number,
             default: 3
         },
+        company: {
+            name: String,
+            cif: String,
+            street: String,
+            number: Number,
+            postal: Number,
+            city: String,
+            province: String
+        },
+        logo: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'statics'
+        }
     },
     {
         timestamps: true,

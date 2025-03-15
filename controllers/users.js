@@ -1,5 +1,3 @@
-
-
 const User = require('../models/userSchema')
 const { matchedData } = require("express-validator");
 const { encrypt, compare } = require('../utils/handlePassword');
@@ -78,6 +76,39 @@ const loginUser = async (req, res) => {
 		console.log(err)
 		handleHttpError(res, "ERROR_LOGIN_USER")
 	}
-    
+
 }
-module.exports = { createUser, verifyUser, loginUser }
+
+
+const updateUser = async (req, res) => {
+    const user = req.user;
+    const userUpdate = await User.findByIdAndUpdate(user._id, {...req.body}, {new: true});
+    res.status(201).json(userUpdate);
+};
+
+const createCompany = async (req, res) => {
+    const user = req.user;
+    const userUpdate = await User.findByIdAndUpdate(user._id, {company: req.body.company}, {new: true});
+    res.status(201).json(userUpdate);
+};
+
+const getUser = async (req, res) => {
+    const user = req.user;
+    const userData = await User.findById(user._id).select("-password -verificationCode -attempts").populate("logo");
+    res.status(200).json(userData);
+};
+
+const deleteUser = async (req, res) => {
+    const user = req.user;
+    const { soft } = req.query;
+    if (soft === 'false') {
+        await User.findByIdAndDelete(user._id);
+        res.status(200).json({ message: 'Usuario eliminado correctamente (hard delete)' });
+    } else {
+        user.status = -1; 
+        await user.save();
+        res.status(200).json({ message: 'Usuario eliminado correctamente (soft delete)' });
+    }
+};
+
+module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser }
