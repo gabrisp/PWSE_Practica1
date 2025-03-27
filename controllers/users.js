@@ -165,3 +165,6 @@ const updatePassword = async (req, res) => {
 }
 
 module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser, recoverPassword, validateCode, updatePassword };
+
+
+
