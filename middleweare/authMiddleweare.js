@@ -18,7 +18,11 @@ const authMiddleware = async (req, res, next) => {
             return;
         }
 
-        const user = await UserModel.findById(dataToken._id)
+        const user = await UserModel.findById(dataToken._id);
+        if( user && user.attempts === 0 && user.status === 0 ) {
+            handleHttpError(res, "USER_LOCKED", 401 );
+            return;
+        }
         req.user = user;
         next();
         

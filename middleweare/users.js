@@ -40,7 +40,7 @@ const verifyMiddleware = async (req, res, next) => {
         return handleHttpError(res, 'Usuario ya verificado', 401); // Retornar aquí para evitar llamar a next()
     }
 
-    if (existingUser.attempts === 0) {
+    if (existingUser.attempts === 0 && existingUser.status === 0) {
         return handleHttpError(res, 'Usuario bloqueado', 401); // Retornar aquí para evitar llamar a next()
     }
 

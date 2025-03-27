@@ -4,6 +4,8 @@ const { encrypt, compare } = require('../utils/handlePassword');
 const generateVerificationCode = require('../utils/handleRegister');
 const { tokenSign } = require('../utils/handleJwt');
 const { handleHttpError } = require('../utils/handleHttpError');
+const { sendEmail } = require('../utils/nodeMail');
+
 
 const createUser = async (req, res) => {
     req = matchedData(req);
@@ -15,12 +17,19 @@ const createUser = async (req, res) => {
             ...req,
             password,
             role,
-            verificationCode,
+            verificationCode
         }
     const user = await User.create(data);
     const token = tokenSign(user);
-
+    const mail = await sendEmail({
+        from: process.env.EMAIL_FROM,
+        to: user.email,
+        subject: "Codigo de verificacion de registro",
+        text: `El codigo de verificacion es: ${verificationCode}`,
+    });
+    console.log(mail);
     user.set('password', undefined, { strict: false });
+    user.set('verificationCode', undefined, { strict: false });
     res.status(201).json({ token, user });
 
    } catch (error) {
@@ -31,7 +40,6 @@ const createUser = async (req, res) => {
 const verifyUser = async (req, res) => {
     const user = req.user;
     const verificationCode = req.body.code;
-
    if ( user.verificationCode === verificationCode) {
         user.status = 1;
         user.verificationCode = null;
@@ -47,9 +55,10 @@ const verifyUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
 	try {
+        console.log("loginUser");
 		req = matchedData(req)
+        console.log(req);
 		const user = await User.findOne({ email: req.email }).select("password name role email")
-		
         if (!user) {
 			handleHttpError(res, "USER_NOT_EXISTS", 404)
 			return
@@ -57,7 +66,7 @@ const loginUser = async (req, res) => {
 
 		const hashPassword = user.password;
 		const check = await compare(req.password, hashPassword)
-		
+		console.log(check);
         if (!check) {
 			handleHttpError(res, "INVALID_PASSWORD", 401)
 			return
@@ -77,8 +86,7 @@ const loginUser = async (req, res) => {
 		handleHttpError(res, "ERROR_LOGIN_USER")
 	}
 
-}
-
+};
 
 const updateUser = async (req, res) => {
     const user = req.user;
@@ -111,4 +119,49 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser }
+
+const recoverPassword = async (req, res) => {
+    
+    const code = generateVerificationCode();
+    console.log(code);
+    const user = await User.findOne({email: req.body.email});
+    if (!user) {
+        handleHttpError(res, "USER_NOT_EXISTS", 404);
+        return;
+    }
+
+    user.verificationCode = code;
+    await user.save();
+
+    await sendEmail({
+        from: process.env.EMAIL_FROM,
+        to: user.email,
+        subject: "Recuperacion de contraseña",
+        text: `El codigo de recuperacion es: ${code}`,
+    });
+    res.status(200).json({ message: 'Codigo de recuperacion enviado correctamente' });
+};
+
+const validateCode = async (req, res) => {
+    const user = await User.findOne({email: req.body.email});
+    if (!user) {
+        handleHttpError(res, "USER_NOT_EXISTS", 404);
+        return;
+    }
+    if (user.verificationCode === req.body.code) {
+        user.verificationCode = null;
+        const token = tokenSign(user);
+        user.set("password", undefined, { strict: false });
+        user.set("verificationCode", undefined, { strict: false });
+        res.status(200).json({ token, user });
+    }
+}
+
+const updatePassword = async (req, res) => {
+    const user = req.user;
+    user.password = await encrypt(req.body.password);
+    await user.save();
+    res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+}
+
+module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser, recoverPassword, validateCode, updatePassword };

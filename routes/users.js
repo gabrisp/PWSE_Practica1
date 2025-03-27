@@ -7,7 +7,7 @@ const middleware  = require('../middleweare/users')
 const authMiddleware = require('../middleweare/authMiddleweare')
 const { uploadMiddleware } = require('../utils/handleStorage')
 const staticController = require('../controllers/static')
-
+const { send } = require("../controllers/email");
 /**
  * @swagger
  * tags:
@@ -16,16 +16,32 @@ const staticController = require('../controllers/static')
  */
 /**
  * @swagger
- * /users/register:
+ * /user/register:
  *   post:
  *     summary: Register a new user
  *     tags: [Users]
- */
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             email:
+ *               type: string
+ *               example: user@example.com
+ *             password:
+ *               type: string
+ *               example: yourpassword
+ *             name:
+ *               type: string
+ *               example: John Doe
+ * */
 router.post('/register', validators.validateCreateUser, middleware.registerMiddleware, controllers.createUser);
 
 /**
  * @swagger
- * /users/login:
+ * /user/login:
  *   post:
  *     summary: Login a user
  *     tags: [Users]
@@ -34,7 +50,7 @@ router.post('/login', validators.validateLoginUser, controllers.loginUser);
 
 /**
  * @swagger
- * /users/verify:
+ * /user/verify:
  *   put:
  *     summary: Verify a user
  *     tags: [Users]
@@ -43,7 +59,7 @@ router.put('/verify', authMiddleware, validators.validateVerifyUser, middleware.
 
 /**
  * @swagger
- * /users/register:
+ * /user/register:
  *   put:
  *     summary: Register a new user
  *     tags: [Users]
@@ -52,7 +68,7 @@ router.put('/register', authMiddleware, validators.validateUpdateUser, middlewar
 
 /**
  * @swagger
- * /users/company:
+ * /user/company:
  *   patch:
  *     summary: Create a new company
  *     tags: [Users]
@@ -61,7 +77,7 @@ router.patch('/company', authMiddleware, validators.companyUserValidator, contro
 
 /**
  * @swagger
- * /users:
+ * /user:
  *   get:
  *     summary: Get a user
  *     tags: [Users]
@@ -70,7 +86,7 @@ router.get('/', authMiddleware, controllers.getUser);
 
 /**
  * @swagger
- * /users:
+ * /user:
  *   delete:
  *     summary: Delete a user
  *     tags: [Users]
@@ -80,11 +96,41 @@ router.delete('/', authMiddleware, controllers.deleteUser);
 
 /**
  * @swagger
- * /users/logo:
+ * /user/logo:
  *   patch:
  *     summary: Upload a logo
  *     tags: [Users]
  */
 router.patch("/logo", authMiddleware, uploadMiddleware.single("image"), staticController.createStatic);
+
+/**
+ * @swagger
+ * /user/recover:
+ *   post:
+ *     summary: Recover a password
+ *     tags: [Users]
+ */
+router.post('/recover', validators.validateRecoverPassword, controllers.recoverPassword);
+
+
+
+/**
+ * @swagger
+ * /user/validation:
+ *   post:
+ *     summary: Validate a code
+ *     tags: [Users]
+ */
+router.post('/validation', validators.validateVerifyCode, controllers.validateCode);
+
+
+/**
+ * @swagger
+ * /user/password:
+ *   patch:
+ *     summary: Update a password
+ *     tags: [Users]
+ */
+router.patch('/password', authMiddleware, validators.validateNewPassword, controllers.updatePassword);
 
 module.exports = router

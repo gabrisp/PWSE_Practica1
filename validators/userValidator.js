@@ -24,6 +24,7 @@ const validateLoginUser = [
     check("age").optional().isNumeric().withMessage('La edad debe ser un numero'),
     check("nif").optional().isLength({ min: 9, max: 9 }).withMessage('El NIF debe tener 9 caracteres'),
     check('email').exists().isEmail().withMessage('El email no es valido'),
+    check('password').exists().notEmpty().isLength({ min: 8, max: 16 }).withMessage('La contraseña debe tener entre 8 y 16 caracteres'),
     (req, res, next) => {
         return validateResults(req, res, next);
     }
@@ -39,6 +40,20 @@ const validateUpdateUser = [
     }
 ]
 
+const validateRecoverPassword = [
+    check('email').exists().isEmail().withMessage('El email no es valido'),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
+
+const validateVerifyCode = [
+    check('code').exists().notEmpty().isNumeric().isLength({ min: 6, max: 6 }),
+    check('email').exists().isEmail().withMessage('El email no es valido'),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
 const companyUserValidator = [
     check('company').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La direccion debe tener entre 3 y 99 caracteres'),
     check('company.name').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('El nombre debe tener entre 3 y 99 caracteres'),
@@ -53,4 +68,11 @@ const companyUserValidator = [
     }
 ]
 
-module.exports = { validateCreateUser, validateVerifyUser, validateLoginUser, companyUserValidator, validateUpdateUser }
+
+const validateNewPassword = [   
+    check('password').exists().notEmpty().isLength({ min: 8, max: 16 }).withMessage('La contraseña debe tener entre 8 y 16 caracteres'),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
+module.exports = { validateCreateUser, validateVerifyUser, validateLoginUser, companyUserValidator, validateUpdateUser, validateRecoverPassword, validateVerifyCode, validateNewPassword }

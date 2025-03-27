@@ -19,7 +19,7 @@ const uploadMiddleware = multer({
     limits: {
         fileSize: 1024 * 1024 * 5 
     }
-})
+});
 
 const fs = require('fs'); // Import the fs module
 
