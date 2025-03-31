@@ -96,13 +96,16 @@ const updateUser = async (req, res) => {
 
 const createCompany = async (req, res) => {
     const user = req.user;
-    const userUpdate = await User.findByIdAndUpdate(user._id, {company: req.body.company}, {new: true});
-    res.status(201).json(userUpdate);
+    user.isAutonomo = false;
+    user.company = req.body.company;
+    await user.save();
+    res.status(201).json(user);
+
 };
 
 const getUser = async (req, res) => {
     const user = req.user;
-    const userData = await User.findById(user._id).select("-password -verificationCode -attempts").populate("logo");
+    const userData = await User.findById(user._id).select("-password -verificationCode -attempts").populate("logo").populate("guests", "-password -verificationCode -attempts -company -guests -logo -status -isAutonomo -address -createdAt -updatedAt");
     res.status(200).json(userData);
 };
 
@@ -164,7 +167,49 @@ const updatePassword = async (req, res) => {
     res.status(200).json({ message: 'Contraseña actualizada correctamente' });
 }
 
-module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser, recoverPassword, validateCode, updatePassword };
+const updateAddress = async (req, res) => {
+    const user = req.user;
+    user.address = req.body.address;
+    await user.save();
+    res.status(200).json({ message: 'Direccion actualizada correctamente' });
+}
+
+const createGuest = async (req, res) => {
+    const user = req.user;
+    const findGuest = await User.findOne({email: req.body.email});
+    if (findGuest) {
+        handleHttpError(res, "GUEST_ALREADY_EXISTS", 400);
+        return;
+    }
+    const guest = await User.create({role: "user", ...req.body});
+    const mail = await sendEmail({
+        from: process.env.EMAIL_FROM,
+        to: guest.email,
+        subject: `${user.name} te ha invitado a que formes parte de su empresa`,
+        text: `Hola ${guest.name}, ${user.name} te ha invitado a que formes parte de su empresa, para ello, puedes acceder a la siguiente url: ${process.env.FRONTEND_URL}/login`,
+    });
+    const token = tokenSign(guest);
+    if (!user.guests) {
+        user.guests = [];
+    }
+    user.guests = [...user.guests, guest._id];
+    await user.save();
+    res.status(201).json({token, guest});
+}
+
+const deleteGuest = async (req, res) => {
+    const user = req.user;
+    const guest = await User.findByIdAndDelete(req.body.guestId);
+    user.guests = user.guests.filter(guest => guest._id.toString() !== req.body.guestId);
+    await user.save();
+    res.status(200).json({ message: 'Invitacion eliminada correctamente' });
+}
+
+module.exports = { createUser, verifyUser, loginUser, createCompany, updateUser, getUser, deleteUser, recoverPassword, validateCode, updatePassword, updateAddress, createGuest, deleteGuest };
+
+
+
+
 
 
 
