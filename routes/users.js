@@ -133,4 +133,32 @@ router.post('/validation', validators.validateVerifyCode, controllers.validateCo
  */
 router.patch('/password', authMiddleware, validators.validateNewPassword, controllers.updatePassword);
 
+/**
+ * @swagger
+ * /user/address:
+ *   patch:
+ *     summary: Update a address
+ *     tags: [Users]
+ */
+router.patch('/address', authMiddleware, validators.addressValidator, controllers.updateAddress);
+
+
+/**
+ * @swagger
+ * /user/guest:
+ *   post:
+ *     summary: Create a guest
+ *     tags: [Users]
+ */ 
+router.post('/invite', authMiddleware, validators.validateCreateGuest, controllers.createGuest);
+
+
+/**
+ * @swagger
+ * /user/guest:
+ *   delete:
+ *     summary: Delete a guest
+ *     tags: [Users]
+ */
+router.delete('/invite', authMiddleware, controllers.deleteGuest);
 module.exports = router
