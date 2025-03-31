@@ -75,4 +75,34 @@ const validateNewPassword = [
         return validateResults(req, res, next);
     }
 ]
-module.exports = { validateCreateUser, validateVerifyUser, validateLoginUser, companyUserValidator, validateUpdateUser, validateRecoverPassword, validateVerifyCode, validateNewPassword }
+
+const addressValidator = [
+    check('address').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La direccion debe tener entre 3 y 99 caracteres'),
+    check('address.street').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La calle debe tener entre 3 y 99 caracteres'),
+    check('address.number').exists().notEmpty().isNumeric().withMessage('El numero debe ser un numero'),
+    check('address.postal').exists().notEmpty().isNumeric().withMessage('El codigo postal debe ser un numero'),
+    check('address.city').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La ciudad debe tener entre 3 y 99 caracteres'),
+    check('address.province').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La provincia debe tener entre 3 y 99 caracteres'),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
+
+
+const validateCreateGuest = [
+    check('name').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('El nombre debe tener entre 3 y 99 caracteres'),
+    check('surnames').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('Los apellidos deben tener entre 3 y 99 caracteres'),
+    check('email').exists().isEmail().withMessage('El email no es valido'),
+    check('company').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La direccion debe tener entre 3 y 99 caracteres'),
+    check('company.name').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('El nombre debe tener entre 3 y 99 caracteres'),
+    check('company.cif').exists().notEmpty().isLength({ min: 9, max: 9 }).withMessage('El CIF debe tener 9 caracteres'),
+    check('company.street').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La calle debe tener entre 3 y 99 caracteres'),
+    check('company.number').exists().notEmpty().isNumeric().withMessage('El numero debe ser un numero'),
+    check('company.postal').exists().notEmpty().isNumeric().withMessage('El codigo postal debe ser un numero'),
+    check('company.city').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La ciudad debe tener entre 3 y 99 caracteres'),
+    check('company.province').exists().notEmpty().isLength({ min: 3, max: 99 }).withMessage('La provincia debe tener entre 3 y 99 caracteres'),
+    (req, res, next) => {
+        return validateResults(req, res, next);
+    }
+]
+module.exports = { validateCreateUser, validateVerifyUser, validateLoginUser, companyUserValidator, validateUpdateUser, validateRecoverPassword, validateVerifyCode, validateNewPassword, addressValidator, validateCreateGuest }
