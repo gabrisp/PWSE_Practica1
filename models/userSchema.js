@@ -16,8 +16,8 @@ const UserScheme = new mongoose.Schema(
         password: String,
         role: {
             type: String,
-            enum: ['user', 'admin'],
-            default: 'user'
+            enum: ['user', 'admin',],
+            default: 'admin'
         },
         verificationCode: Number,
         status: {
@@ -27,6 +27,17 @@ const UserScheme = new mongoose.Schema(
         attempts: {
             type: Number,
             default: 3
+        },
+        isAutonomo: {
+            type: Boolean,
+            default: true
+        },
+        address: {
+            street: String,
+            number: Number,
+            postal: Number,
+            city: String,
+            province: String
         },
         company: {
             name: String,
@@ -40,7 +51,11 @@ const UserScheme = new mongoose.Schema(
         logo: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'statics'
-        }
+        },
+        guests: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user'
+        }]
     },
     {
         timestamps: true,
@@ -49,4 +64,5 @@ const UserScheme = new mongoose.Schema(
 
 )
 
+module.exports = mongoose.model('user', UserScheme)
 module.exports = mongoose.model('user', UserScheme)
