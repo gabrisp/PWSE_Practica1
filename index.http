@@ -1,0 +1,240 @@
+
+
+### PETICIONES PARA USUARIOS
+
+## REGISTRO DE UN USUARIO
+POST /api/user/register/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Host: localhost:3000
+Content-Length: 86
+
+{
+	"name": "Gabriel",
+	"email": "gabrielsanpal@icloud.com",
+	"password": "Gabriel29"
+}
+
+## LOGIN DE UN USUARIO
+POST /api/user/login/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Host: localhost:3000
+Content-Length: 65
+
+{
+	"email": "gabrielsanpal@gmail.com",
+	"password": "hola12345"
+}
+
+## VERIFICAR UN USUARIO
+PUT /api/user/verify/?= HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MmMwMjI2ZDhiNTQ0NDQyMzRhZjIiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBpY2xvdWQuY29tIiwibmFtZSI6IkdhYnJpZWwiLCJpYXQiOjE3NDMwNzIyNTgsImV4cCI6MTc0MzE1ODY1OH0.OdBLSb2184VEkFaZp6mA45Gs5PFdNiii4xosn29X7Rw
+Host: localhost:3000
+Content-Length: 19
+
+{
+	"code": 349105
+}
+
+## FINALIZAR REGISTRO DE UN USUARIO
+PUT /api/user/register/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjFlZGMwN2QzNmQxYWQ5OWM1NDMiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MTg2MTk5NCwiZXhwIjoxNzQxOTQ4Mzk0fQ.jJ7nCtF0HcspfrMKmtPTTBSPVGRuDT39-6ziqB39TAE
+Host: localhost:3000
+Content-Length: 105
+
+{
+  "email": "gabrielsanpal2@gmail.com",
+  "name": "Gabriel",
+  "surnames": "S P",
+  "nif": "40000000W"
+}
+
+## CREAR COMPAÑIA DE UN USUARIO
+PATCH /api/user/company/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjFlZGMwN2QzNmQxYWQ5OWM1NDMiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MTg2MTk5NCwiZXhwIjoxNzQxOTQ4Mzk0fQ.jJ7nCtF0HcspfrMKmtPTTBSPVGRuDT39-6ziqB39TAE
+Host: localhost:3000
+Content-Length: 182
+
+{
+  "company": {
+    "name": "GSP, SL.",
+    "cif": "BXXXXXXXX",
+    "street": "hhhh V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+
+## GET INFO DE UN USUARIO
+GET /api/user/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MjVhZmQxZTVjMmZjZTI4N2Q1ODUiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MzQ0MTM5NSwiZXhwIjoxNzQzNTI3Nzk1fQ.b4AcHqs7IApZJ3E4kLKI6qoPrZBGcai21Ok5Ohjbx-Q
+Host: localhost:3000
+
+
+## SUBIR Y/O CAMBIAR LOGO DE UN USUARIO
+PATCH /api/user/logo HTTP/1.1
+Content-Type: multipart/form-data; boundary=---011000010111000001101001
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2Q0MDZlZmZmMzQwZWEyNDUyODNmNjIiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbDNAZ21haWwuY29tIiwibmFtZSI6IkdhYnJpZWwiLCJpYXQiOjE3NDE5NDg2NTUsImV4cCI6MTc0MjAzNTA1NX0.8He6Mps9Z2W_nXkuWkcvBu0ymKrIaFjCNIH95zZ-Elg
+Host: localhost:3000
+Content-Length: 169
+
+-----011000010111000001101001
+Content-Disposition: form-data; name="image"; filename="216899-9124_2.png"
+Content-Type: image/png
+
+
+-----011000010111000001101001--
+
+
+
+## SOLICITAR CAMBIO DE PASSWORD
+POST /api/user/recover HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Host: localhost:3000
+Content-Length: 39
+
+{
+	"email": "gabrielsanpal@gmail.com"
+}
+
+## VALIDACION PARA EL CAMBIO DE CONTRASEÑA
+POST /api/user/validation HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Host: localhost:3000
+Content-Length: 56
+
+{
+	"email": "gabrielsanpal@gmail.com",
+	"code": 658095
+}
+
+## CAMBIAR PASSWORD DE UN USUARIO
+PATCH /api/user/password HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MjVhZmQxZTVjMmZjZTI4N2Q1ODUiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MzA3MTc1MCwiZXhwIjoxNzQzMTU4MTUwfQ.3nA89KpmcIgEJU3f8RJwBdEsBAyxZ-jLu4CusZ-eA3c
+Host: localhost:3000
+Content-Length: 28
+
+{
+	"password": "hola12345"
+}
+
+## INVITAR A UN USUARIO A UNA COMPAÑIA
+POST /api/user/invite?= HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MjVhZmQxZTVjMmZjZTI4N2Q1ODUiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MzQ0MTM5NSwiZXhwIjoxNzQzNTI3Nzk1fQ.b4AcHqs7IApZJ3E4kLKI6qoPrZBGcai21Ok5Ohjbx-Q
+Host: localhost:3000
+Content-Length: 273
+
+{
+	"name": "Jose",
+	"surnames": "Lordan",
+  "email": "elohim.marshaun@themodish.org",
+  "company": {
+    "name": "Servitop, SL.",
+    "cif": "BXXXXXXXX",
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+## ACTUALZAR DIRECCION DE UN USUARIO
+PATCH /api/user/address HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MjVhZmQxZTVjMmZjZTI4N2Q1ODUiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MzQ0MTM5NSwiZXhwIjoxNzQzNTI3Nzk1fQ.b4AcHqs7IApZJ3E4kLKI6qoPrZBGcai21Ok5Ohjbx-Q
+Host: localhost:3000
+Content-Length: 136
+
+{
+  "address": {
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+## ACTUALIZAR LA COMPAÑIA DE UN USUARIO
+PATCH /api/user/company HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U1MjVhZmQxZTVjMmZjZTI4N2Q1ODUiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MzQ0MTM5NSwiZXhwIjoxNzQzNTI3Nzk1fQ.b4AcHqs7IApZJ3E4kLKI6qoPrZBGcai21Ok5Ohjbx-Q
+Host: localhost:3000
+Content-Length: 189
+
+{
+  "company": {
+    "name": "Servitop, SL.",
+    "cif": "BXXXXXXXX",
+    "street": "Carlos V",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+## ELIMINAR UN USUARIO
+DELETE /api/user/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjFlZGMwN2QzNmQxYWQ5OWM1NDMiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MTg2MTk5NCwiZXhwIjoxNzQxOTQ4Mzk0fQ.jJ7nCtF0HcspfrMKmtPTTBSPVGRuDT39-6ziqB39TAE
+Host: localhost:3000
+
+
+
+### PETICIONES PARA CLIENTES DE LOS USUARIOS
+# GET CLIENTES DE UN USER
+GET /api/client/ HTTP/1.1
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjFlZGMwN2QzNmQxYWQ5OWM1NDMiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MTg2MTk5NCwiZXhwIjoxNzQxOTQ4Mzk0fQ.jJ7nCtF0HcspfrMKmtPTTBSPVGRuDT39-6ziqB39TAE
+Host: localhost:3000
+
+# GET CLIENTE CONCRETO DE UN USER
+GET /api/client/67d2b4237fde39095afe7cee/ HTTP/1.1
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjFlZGMwN2QzNmQxYWQ5OWM1NDMiLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbEBnbWFpbC5jb20iLCJuYW1lIjoiR2FicmllbCIsImlhdCI6MTc0MTg2MTk5NCwiZXhwIjoxNzQxOTQ4Mzk0fQ.jJ7nCtF0HcspfrMKmtPTTBSPVGRuDT39-6ziqB39TAE
+Host: localhost:3000
+
+# CREAR UN CLIENTE PARA UN USER
+POST /api/client/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2QyYjNmMTdmZGUzOTA5NWFmZTdjZTciLCJyb2xlIjoidXNlciIsImVtYWlsIjoiZ2FicmllbHNhbnBhbDJAZ21haWwuY29tIiwibmFtZSI6IkdhYnJpZWwiLCJpYXQiOjE3NDE4NjE5MDIsImV4cCI6MTc0MTk0ODMwMn0.MG6zKLVjCLfc45jJA7AmZvO4kJJqWtnJKnEofxnxD1I
+Host: localhost:3000
+Content-Length: 176
+
+{
+  "name": "ACS",
+  "cif": "D52921210",
+  "address": {
+    "street": "Cliente 2",
+    "number": 22,
+    "postal": 28936,
+    "city": "Móstoles",
+    "province": "Madrid"
+  }
+}
+
+
