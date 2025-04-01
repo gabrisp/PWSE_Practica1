@@ -100,7 +100,6 @@ const createCompany = async (req, res) => {
     user.company = req.body.company;
     await user.save();
     res.status(201).json(user);
-
 };
 
 const getUser = async (req, res) => {
@@ -109,19 +108,7 @@ const getUser = async (req, res) => {
     res.status(200).json(userData);
 };
 
-const deleteUser = async (req, res) => {
-    const user = req.user;
-    const { soft } = req.query;
-    if (soft === 'false') {
-        await User.findByIdAndDelete(user._id);
-        res.status(200).json({ message: 'Usuario eliminado correctamente (hard delete)' });
-    } else {
-        user.status = -1; 
-        await user.save();
-        res.status(200).json({ message: 'Usuario eliminado correctamente (soft delete)' });
-    }
-};
-
+ 
 
 const recoverPassword = async (req, res) => {
     
@@ -169,7 +156,14 @@ const updatePassword = async (req, res) => {
 
 const updateAddress = async (req, res) => {
     const user = req.user;
-    user.address = req.body.address;
+    user.address = req.user.address;
+    if (user.isAutonomo){
+        user.company = {
+            ...user.address,
+            name: user.name,
+            nif: user.dni || "",
+        }
+    }
     await user.save();
     res.status(200).json({ message: 'Direccion actualizada correctamente' });
 }
