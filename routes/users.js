@@ -64,7 +64,7 @@ router.put('/verify', authMiddleware, validators.validateVerifyUser, middleware.
  *     summary: Register a new user
  *     tags: [Users]
  */
-router.put('/register', authMiddleware, validators.validateUpdateUser, middleware.finishRegisterMiddleware, controllers.updateUser);
+router.put('/register', authMiddleware, middleware.isActiveUser, validators.validateUpdateUser, middleware.finishRegisterMiddleware, controllers.updateUser);
 
 /**
  * @swagger
@@ -73,7 +73,7 @@ router.put('/register', authMiddleware, validators.validateUpdateUser, middlewar
  *     summary: Create a new company
  *     tags: [Users]
  */
-router.patch('/company', authMiddleware, validators.companyUserValidator, controllers.createCompany);
+router.patch('/company', authMiddleware, middleware.isActiveUser, validators.companyUserValidator, controllers.createCompany);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ router.patch('/company', authMiddleware, validators.companyUserValidator, contro
  *     summary: Get a user
  *     tags: [Users]
  */
-router.get('/', authMiddleware, controllers.getUser);
+router.get('/', authMiddleware, middleware.isActiveUser, controllers.getUser);
 
 /**
  * @swagger
@@ -91,7 +91,7 @@ router.get('/', authMiddleware, controllers.getUser);
  *     summary: Delete a user
  *     tags: [Users]
  */
-router.delete('/', authMiddleware, controllers.deleteUser);
+router.delete('/', authMiddleware,  controllers.deleteUser);
 
 
 /**
@@ -101,7 +101,7 @@ router.delete('/', authMiddleware, controllers.deleteUser);
  *     summary: Upload a logo
  *     tags: [Users]
  */
-router.patch("/logo", authMiddleware, uploadMiddleware.single("image"), staticController.createStatic);
+router.patch("/logo", authMiddleware, middleware.isActiveUser, uploadMiddleware.single("image"), staticController.createStatic);
 
 /**
  * @swagger
@@ -140,7 +140,7 @@ router.patch('/password', authMiddleware, validators.validateNewPassword, contro
  *     summary: Update a address
  *     tags: [Users]
  */
-router.patch('/address', authMiddleware, validators.addressValidator, controllers.updateAddress);
+router.patch('/address', authMiddleware, middleware.isActiveUser, validators.addressValidator, controllers.updateAddress);
 
 
 /**
@@ -150,7 +150,7 @@ router.patch('/address', authMiddleware, validators.addressValidator, controller
  *     summary: Create a guest
  *     tags: [Users]
  */ 
-router.post('/invite', authMiddleware, validators.validateCreateGuest, controllers.createGuest);
+router.post('/invite', authMiddleware, middleware.isActiveUser, validators.validateCreateGuest, controllers.createGuest);
 
 
 /**
@@ -160,5 +160,5 @@ router.post('/invite', authMiddleware, validators.validateCreateGuest, controlle
  *     summary: Delete a guest
  *     tags: [Users]
  */
-router.delete('/invite', authMiddleware, controllers.deleteGuest);
+router.delete('/invite', authMiddleware, middleware.isActiveUser, controllers.deleteGuest);
 module.exports = router

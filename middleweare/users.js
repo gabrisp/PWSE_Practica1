@@ -47,6 +47,15 @@ const verifyMiddleware = async (req, res, next) => {
     req.user = existingUser; // Agregar el usuario al objeto req
     next(); // Solo se llama a next() si no hay errores
 
+};
+
+const isActiveUser = async (req, res, next) => {
+
+	if (req.user.status === 0) {
+        return handleHttpError(res, 'Usuario no verificado', 401); // Retornar aquí para evitar llamar a next()
+	}else {
+		next()
+	}
 }
 
-module.exports = { registerMiddleware, verifyMiddleware, finishRegisterMiddleware }
+module.exports = { registerMiddleware, verifyMiddleware, finishRegisterMiddleware, isActiveUser }

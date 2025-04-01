@@ -3,7 +3,7 @@ const router = require('express').Router();
 const validators = require('../validators/clientsValidator');
 const controllers = require('../controllers/clients');
 const authMiddleware = require('../middleweare/authMiddleweare');
-
+const usersMiddleware = require('../../middleweare/users');
 /**
  * @swagger
  * tags:
@@ -19,7 +19,7 @@ const authMiddleware = require('../middleweare/authMiddleweare');
  * 
  */
 
-router.post('/', validators.createClientValidator, authMiddleware, controllers.createClient);
+router.post('/', validators.createClientValidator, authMiddleware, usersMiddleware.isActiveUser, controllers.createClient);
 
 /**
  * @swagger
@@ -28,7 +28,7 @@ router.post('/', validators.createClientValidator, authMiddleware, controllers.c
  *     summary: Get all clients
  *     tags: [Clients]
  */
-router.get('/', authMiddleware, controllers.getClients);
+router.get('/', authMiddleware, usersMiddleware.isActiveUser, controllers.getClients);
 
 /**
  * @swagger
@@ -37,7 +37,7 @@ router.get('/', authMiddleware, controllers.getClients);
  *     summary: Get a client by Id
  *     tags: [Clients]
  */
-router.get('/:id', authMiddleware, controllers.getClientById);
+router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, midd controllers.getClientById);
 
 
 module.exports = router;
