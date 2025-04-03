@@ -39,5 +39,13 @@ router.get('/', authMiddleware, usersMiddleware.isActiveUser, controllers.getCli
  */
 router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, midd controllers.getClientById);
 
+/**
+ * @swagger
+ * /clients/{id}:
+ *   delete:
+ *     summary: Delete a client by Id
+ *     tags: [Clients]
+ */
+router.delete('/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.deleteClient);
 
 module.exports = router;

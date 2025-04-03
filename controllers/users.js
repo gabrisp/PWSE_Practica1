@@ -108,7 +108,15 @@ const getUser = async (req, res) => {
     res.status(200).json(userData);
 };
 
- 
+const deleteUser = async (req, res) => {
+    const user = req.user;
+    const { soft } = req.query;
+    if (soft === 'false') {
+        await User.findByIdAndDelete(user._id);
+        res.status(200).json({ message: 'Usuario eliminado correctamente (hard delete)' });
+    }
+};
+
 
 const recoverPassword = async (req, res) => {
     

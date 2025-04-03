@@ -18,4 +18,13 @@ const getClientById = async (req, res) => {
     res.status(200).json(client);
 }
 
+const deleteClient = async (req, res) => {
+    const user = req.user;
+    const { soft } = req.query;
+    if (soft === 'false') {
+        await Client.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Cliente eliminado correctamente (hard delete)' });
+    }
+};
+
 module.exports = { createClient, getClients, getClientById };
