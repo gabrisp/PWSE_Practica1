@@ -6,7 +6,7 @@ const createClient = async (req, res) => {
 }
 
 const getClients = async (req, res) => {
-    const clients = await Client.find().where({user: req.user._id});
+    const clients = await Client.find().where({user: req.user._id, isActive: true});
     res.status(200).json(clients);
 }
 
@@ -24,7 +24,15 @@ const deleteClient = async (req, res) => {
     if (soft === 'false') {
         await Client.findByIdAndDelete(req.params.id);
         res.status(200).json({ message: 'Cliente eliminado correctamente (hard delete)' });
+    } else {
+        await Client.findByIdAndUpdate(req.params.id, { isActive: false });
+        res.status(200).json({ message: 'Cliente eliminado correctamente (soft delete)' });
     }
 };
 
-module.exports = { createClient, getClients, getClientById };
+const getArchivedClients = async (req, res) => {
+    const clients = await Client.find().where({user: req.user._id, isActive: false});
+    res.status(200).json(clients);
+}
+
+module.exports = { createClient, getClients, getClientById, getArchivedClients };

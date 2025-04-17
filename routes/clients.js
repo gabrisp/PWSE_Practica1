@@ -37,7 +37,7 @@ router.get('/', authMiddleware, usersMiddleware.isActiveUser, controllers.getCli
  *     summary: Get a client by Id
  *     tags: [Clients]
  */
-router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, midd controllers.getClientById);
+router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.getClientById);
 
 /**
  * @swagger
@@ -48,4 +48,12 @@ router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, midd controller
  */
 router.delete('/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.deleteClient);
 
+/**
+ * @swagger
+ * /clients/archived:
+ *   get:
+ *     summary: Get all archived clients
+ *     tags: [Clients]
+ */
+router.get('/archived', authMiddleware, usersMiddleware.isActiveUser, controllers.getArchivedClients);
 module.exports = router;

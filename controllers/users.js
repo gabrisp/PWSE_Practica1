@@ -114,6 +114,10 @@ const deleteUser = async (req, res) => {
     if (soft === 'false') {
         await User.findByIdAndDelete(user._id);
         res.status(200).json({ message: 'Usuario eliminado correctamente (hard delete)' });
+    }else{
+        user.status = -1;
+        await user.save();
+        res.status(200).json({ message: 'Usuario eliminado correctamente (soft delete)' });
     }
 };
 

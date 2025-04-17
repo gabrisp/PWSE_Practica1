@@ -15,6 +15,10 @@ const clientsScheme = new mongoose.Schema({
         postal: Number,
         city: String,
         province: String
+    },
+    isActive: {
+        type: Boolean,
+        default: true
     }
 }, { timestamps: true });
 
