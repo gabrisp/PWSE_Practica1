@@ -13,4 +13,4 @@ const StaticScheme = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("statics", StaticScheme)
+module.exports = mongoose.model("Static", StaticScheme)

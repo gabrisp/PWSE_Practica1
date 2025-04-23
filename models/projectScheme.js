@@ -50,12 +50,12 @@ const projectSchema = new mongoose.Schema({
     },
     client: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'clients',
+        ref: 'Client',
         required: [true, 'El ID del cliente es obligatorio']
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
+        ref: 'User',
         required: [true, 'El ID del usuario es obligatorio']
     },
     isActive: {
@@ -66,4 +66,4 @@ const projectSchema = new mongoose.Schema({
     timestamps: true // Añade createdAt y updatedAt
 });
 
-module.exports = mongoose.model('project', projectSchema);
+module.exports = mongoose.model('Project', projectSchema);

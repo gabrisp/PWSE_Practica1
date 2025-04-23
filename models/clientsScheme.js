@@ -7,7 +7,7 @@ const clientsScheme = new mongoose.Schema({
     cif: String,
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
     },
     address: {
         street: String,
@@ -22,4 +22,4 @@ const clientsScheme = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('clients', clientsScheme);
+module.exports = mongoose.model('Client', clientsScheme);

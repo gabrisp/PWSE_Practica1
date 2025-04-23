@@ -50,11 +50,11 @@ const UserScheme = new mongoose.Schema(
         },
         logo: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'statics'
+            ref: 'Static'
         },
         guests: [{
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'user'
+            ref: 'User'
         }]
     },
     {
@@ -64,5 +64,4 @@ const UserScheme = new mongoose.Schema(
 
 )
 
-module.exports = mongoose.model('user', UserScheme)
-module.exports = mongoose.model('user', UserScheme)
+module.exports = mongoose.model('User', UserScheme)
