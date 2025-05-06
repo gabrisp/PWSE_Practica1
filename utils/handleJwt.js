@@ -10,6 +10,7 @@ const tokenSign = (user) => {
             role: user.role,
             email: user.email,
             name: user.name,
+            status: user.status
         },
         JWT,
         { expiresIn: "24h" }
