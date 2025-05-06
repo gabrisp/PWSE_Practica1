@@ -1,5 +1,6 @@
 const { check } = require('express-validator');
-const { validateResults } = require('../utils/handleValidator');
+const validateResults = require('../utils/handleValidator');
+
 
 const projectValidator = [
     // Datos básicos del proyecto
@@ -54,4 +55,4 @@ const projectValidator = [
 
 
 
-module.exports = { createProjectValidator, updateProjectValidator };
+module.exports = { projectValidator };

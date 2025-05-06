@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const mongooseDelete = require('mongoose-delete');
 const deliveryNoteSchema = new mongoose.Schema({
     clientId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -18,11 +18,11 @@ const deliveryNoteSchema = new mongoose.Schema({
     },
     material: {
         type: String,
-        required: function() { return this.format === 'material'; }
+        required: (this.format === 'material')
     },
     hours: {
         type: Number,
-        required: function() { return this.format === 'hours'; }
+        required: (this.format === 'hours')
     },
     description: {
         type: String,
@@ -31,7 +31,16 @@ const deliveryNoteSchema = new mongoose.Schema({
     workdate: {
         type: Date,
         required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    signed: {
+        type: Boolean,
+        default: false
     }
 });
-
-module.exports = mongoose.model('Project', deliveryNoteSchema);
+deliveryNoteSchema.plugin(mongooseDelete, { overrideMethods: 'all' });
+module.exports = mongoose.model('DeliveryNote', deliveryNoteSchema);

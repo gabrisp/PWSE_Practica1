@@ -1,13 +1,31 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-const dbConnect = () => {
-    const db_uri = process.env.DB_URI
-    mongoose.set('strictQuery', false)
-    mongoose.connect(db_uri)
-}
+const connectDB = async () => {
+    try {
+        const isTest = process.env.TEST_MODE === 'True';
+        
+        const uri = isTest ? process.env.TEST_DB_URI : process.env.DB_URI;
 
-mongoose.connection.on('connected', () => console.log("Conectado a la BD"))
+        await mongoose.connect(uri);
+        console.log('Database connected successfully');
+    } catch (error) {
+        console.error('Error connecting to database:', error);
+        process.exit(1);
+    }
+};
 
-mongoose.connection.on('error', (e) => console.log (e.message))
+const closeDB = async () => {
+    try {
+        await mongoose.connection.close();
+        console.log('Database connection closed');
+    } catch (error) {
+        console.error('Error closing database connection:', error);
+        process.exit(1);
+    }
+};
 
-module.exports = dbConnect
+module.exports = {
+    connectDB,
+    closeDB
+}; 

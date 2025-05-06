@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const clientsScheme = new mongoose.Schema({
     name: String,
@@ -16,10 +17,14 @@ const clientsScheme = new mongoose.Schema({
         city: String,
         province: String
     },
-    isActive: {
-        type: Boolean,
-        default: true
-    }
-}, { timestamps: true });
+}, { 
+    timestamps: true,
+    versionKey: false 
+});
+
+// El plugin debe ir ANTES del export
+clientsScheme.plugin(mongooseDelete, { 
+    overrideMethods: 'all',
+});
 
 module.exports = mongoose.model('Client', clientsScheme);

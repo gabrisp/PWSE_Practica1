@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const projectSchema = new mongoose.Schema({
     name: {
@@ -58,12 +59,13 @@ const projectSchema = new mongoose.Schema({
         ref: 'User',
         required: [true, 'El ID del usuario es obligatorio']
     },
-    isActive: {
-        type: Boolean,
-        default: true
-    }
 }, {
     timestamps: true // Añade createdAt y updatedAt
+});
+
+// Añadir el plugin mongoose-delete
+projectSchema.plugin(mongooseDelete, { 
+    overrideMethods: 'all',
 });
 
 module.exports = mongoose.model('Project', projectSchema);

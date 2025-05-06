@@ -238,3 +238,29 @@ Content-Length: 176
 }
 
 
+
+
+## PETICIONES PRO
+
+## CREAR PROYECTO
+POST /api/project/ HTTP/1.1
+Content-Type: application/json
+User-Agent: insomnia/10.1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODE3N2FjZTk3Y2M2YTMzZDUxZjRiNTEiLCJyb2xlIjoidXNlciIsImVtYWlsIjoic29oYS5lcmFuZHlAbWFnbmV0aWNvYWsuY29tIiwibmFtZSI6IkdhYnJpZWwiLCJpYXQiOjE3NDYzNjkzMzAsImV4cCI6MTc0NjQ1NTczMH0.VdTkyzx6226o_SAwgJ_fP-UwpfDwNhM1tRWlKhjbrYg
+Host: localhost:3000
+Content-Length: 176
+
+{
+  "name": "Proyecto 1",
+  "projectCode": "PRJ001",
+  "email": "proyecto1@email.com",
+  "code": "INT001",
+  "clientId": "665f1e2b3c4d5e6f7a8b9c0d",
+  "address": {
+    "street": "Calle Falsa",
+    "number": 123,
+    "postal": "28080",
+    "city": "Madrid",
+    "province": "Madrid"
+  }
+}

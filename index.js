@@ -11,6 +11,8 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 
+const morganBody = require('morgan-body')
+const loggerStream = require('./utils/handleLogger')
 
 const app = express();
 const port = process.env.PORT || 3000
@@ -50,4 +52,12 @@ app.listen(port, () => {
         }`);
 });
 
-dbConnect()
+morganBody(app, {
+    noColors: true,
+    skip: function(req, res) {
+    return res.statusCode < 400
+    },
+    stream: loggerStream
+})
+
+dbConnect.connectDB()

@@ -3,7 +3,7 @@ const router = require('express').Router();
 const validators = require('../validators/clientsValidator');
 const controllers = require('../controllers/clients');
 const authMiddleware = require('../middleweare/authMiddleweare');
-const usersMiddleware = require('../../middleweare/users');
+const usersMiddleware = require('../middleweare/users');
 /**
  * @swagger
  * tags:
@@ -25,10 +25,20 @@ router.post('/', validators.createClientValidator, authMiddleware, usersMiddlewa
  * @swagger
  * /clients:
  *   get:
- *     summary: Get all clients
+ *     summary: Get all active clients
  *     tags: [Clients]
  */
 router.get('/', authMiddleware, usersMiddleware.isActiveUser, controllers.getClients);
+
+/**
+ * @swagger
+ * /clients/archived:
+ *   get:
+ *     summary: Get all archived clients
+ *     tags: [Clients]
+ */
+router.get('/archived', authMiddleware, usersMiddleware.isActiveUser, controllers.getArchivedClients);
+
 
 /**
  * @swagger
@@ -43,17 +53,27 @@ router.get('/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.get
  * @swagger
  * /clients/{id}:
  *   delete:
- *     summary: Delete a client by Id
+ *     summary: Hard delete a client
  *     tags: [Clients]
  */
 router.delete('/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.deleteClient);
 
 /**
  * @swagger
- * /clients/archived:
- *   get:
- *     summary: Get all archived clients
+ * /clients/archive/{id}:
+ *   delete:
+ *     summary: Archive (soft delete) a client
  *     tags: [Clients]
  */
-router.get('/archived', authMiddleware, usersMiddleware.isActiveUser, controllers.getArchivedClients);
+router.delete('/archive/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.archiveClient);
+
+/**
+ * @swagger
+ * /clients/restore/{id}:
+ *   patch:
+ *     summary: Restore an archived client
+ *     tags: [Clients]
+ */
+router.patch('/restore/:id', authMiddleware, usersMiddleware.isActiveUser, controllers.restoreClient);
+
 module.exports = router;

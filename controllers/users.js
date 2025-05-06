@@ -9,33 +9,40 @@ const { sendEmail } = require('../utils/nodeMail');
 
 const createUser = async (req, res) => {
     req = matchedData(req);
-   try {
-        const password = await encrypt(req.password);
-        const role = req.role || "user";
-        const verificationCode = generateVerificationCode();
-        const data = {
-            ...req,
-            password,
-            role,
-            verificationCode
-        }
-    const user = await User.create(data);
-    const token = tokenSign(user);
-    const mail = await sendEmail({
+  
+    try {
+      const password = await encrypt(req.password);
+      const role = req.role || "user";
+      const verificationCode = generateVerificationCode();
+  
+      const data = {
+        ...req,
+        password,
+        role,
+        verificationCode
+      };
+  
+      const user = await User.create(data);
+      const token = tokenSign(user);
+  
+      const mail = await sendEmail({
         from: process.env.EMAIL_FROM,
         to: user.email,
         subject: "Codigo de verificacion de registro",
         text: `El codigo de verificacion es: ${verificationCode}`,
-    });
-    console.log(mail);
-    user.set('password', undefined, { strict: false });
-    user.set('verificationCode', undefined, { strict: false });
-    res.status(201).json({ token, user });
-
-   } catch (error) {
-        handleHttpError(res, 'Error al crear el usuario', 500)
-   }
-};
+      });
+  
+      user.set('password', undefined, { strict: false });
+      user.set('verificationCode', undefined, { strict: false });
+  
+      res.status(201).json({ token, user });
+  
+    } catch (error) {
+      console.error("Error en createUser:", error); // IMPORTANTE
+      handleHttpError(res, 'Error al crear el usuario', 500);
+    }
+  };
+  
 
 const verifyUser = async (req, res) => {
     const user = req.user;

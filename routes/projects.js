@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { createProject, updateProject, deleteProject, getProjects, getArchivedProjects, getProjectById, archiveProject } = require('../controllers/projects');
-const { isActiveUser } = require('../middleweare/users');
-const authMiddleware = require('../middleweare/auth');
-const validators = require('../validators/projectsValidator');
+const { createProject, updateProject, deleteProject, getProjects, getArchivedProjects, getProjectById, archiveProject, restoreProject } = require('../controllers/projects');
 
+const authMiddleware = require('../middleweare/authMiddleweare');
+const validators = require('../validators/projectsValidator');
+const { isActiveUser } = require('../middleweare/users');
 /**
  * @swagger
  * tags:
@@ -19,7 +19,7 @@ const validators = require('../validators/projectsValidator');
  *     summary: Crear un nuevo proyecto
  *     tags: [Projects]
  */
-router.post('/', authMiddleware, isActiveUser, validators.createProjectValidator, createProject);
+router.post('/', authMiddleware, isActiveUser, validators.projectValidator, createProject);
 
 /**
  * @swagger
@@ -28,16 +28,34 @@ router.post('/', authMiddleware, isActiveUser, validators.createProjectValidator
  *     summary: Actualizar un proyecto existente
  *     tags: [Projects]
  */
-router.put('/:id', authMiddleware, isActiveUser, validators.updateProjectValidator, updateProject);
+router.put('/:id', authMiddleware, isActiveUser, validators.projectValidator, updateProject);
 
 /**
  * @swagger
  * /projects/{id}:
  *   delete:
- *     summary: Eliminar un proyecto
+ *     summary: Eliminar permanentemente un proyecto
  *     tags: [Projects]
  */
 router.delete('/:id', authMiddleware, isActiveUser, deleteProject);
+
+/**
+ * @swagger
+ * /projects/archive/{id}:
+ *   delete:
+ *     summary: Archivar un proyecto (soft delete)
+ *     tags: [Projects]
+ */
+router.delete('/archive/:id', authMiddleware, isActiveUser, archiveProject);
+
+/**
+ * @swagger
+ * /projects/restore/{id}:
+ *   patch:
+ *     summary: Restaurar un proyecto archivado
+ *     tags: [Projects]
+ */
+router.patch('/restore/:id', authMiddleware, isActiveUser, restoreProject);
 
 /**
  * @swagger
@@ -66,11 +84,4 @@ router.get('/archived', authMiddleware, isActiveUser, getArchivedProjects);
  */
 router.get('/:id', authMiddleware, isActiveUser, getProjectById);
 
-/**
- * @swagger
- * /projects/{id}/archive:
- *   put:
- *     summary: Archivar un proyecto
- *     tags: [Projects]
- */
-router.put('/:id/archive', authMiddleware, isActiveUser, archiveProject);
+module.exports = router;

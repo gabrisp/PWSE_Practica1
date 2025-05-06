@@ -1,25 +1,42 @@
 const Project = require('../models/projectScheme');
+const {handleHttpError} = require('../utils/handleHttpError');
 
+const getProjects = async (req, res) => {
+    const projects = await Project.find().where({user: req.user._id}).populate('client');
+    res.status(200).json(projects);
+};
+
+const getProjectById = async (req, res) => {
+    const project = await Project.findById(req.params.id).where({user: req.user._id}).populate('client');
+    if (!project) {
+        handleHttpError(res, 'Project not found', 404);
+    }
+    res.status(200).json(project);
+};
 
 const createProject = async (req, res) => {
-    const project = await Project.create({...req.body, user: req.user._id});
-    res.status(201).json(project);
+    try {
+        const project = await Project.create({...req.body, user: req.user._id, client: req.body.clientId});
+        console.log(project);
+        res.status(201).json(project);
+    } catch (error) {
+        handleHttpError(res, 'Error creating project', 500);
+    }
 };
 
 const updateProject = async (req, res) => {
     try {
-        
-        const project = await Project.findById(req.params.id);
+        const project = await Project.findById(req.params.id).where({user: req.user._id});
         if (!project) {
-            return res.status(404).json({ error: 'Proyecto no encontrado' });
+            handleHttpError(res, 'Project not found', 404);
         }
 
         if (!project.active) {
-            return res.status(403).json({ error: 'El proyecto no está activo' });
+            handleHttpError(res, 'El proyecto no está activo', 403);
         }
 
         if (project.user.toString() !== req.user._id.toString()) {
-            return res.status(403).json({ error: 'No tienes permisos para actualizar este proyecto' });
+            handleHttpError(res, 'No tienes permisos para actualizar este proyecto', 403);
         }
 
         // Actualizamos los campos del proyecto existente
@@ -34,7 +51,7 @@ const updateProject = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleHttpError(res, 'Error updating project', 500);
     }
 };
 
@@ -42,53 +59,57 @@ const deleteProject = async (req, res) => {
     try {
         const project = await Project.findById(req.params.id).where({user: req.user._id});
         if (!project) {
-            return res.status(404).json({ error: 'Proyecto no encontrado' });
+            handleHttpError(res, 'Project not found', 404);
         }
-        await Project.findByIdAndDelete(req.params.id);
-        res.status(200).json({ message: 'Proyecto eliminado correctamente' });
+        await project.deleteOne(); // Hard delete
+        res.status(200).json({ message: 'Proyecto eliminado permanentemente' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleHttpError(res, 'Error deleting project', 500);
     }
-};
-
-const getProjects = async (req, res) => {
-    const projects = await Project.find().where({user: req.user._id, isActive: true});
-    res.status(200).json(projects);
-};
-
-const getArchivedProjects = async (req, res) => {
-    const projects = await Project.find().where({user: req.user._id, isActive: false});
-    res.status(200).json(projects);
-};
-
-const getProjectById = async (req, res) => {
-    const project = await Project.findById(req.params.id).where({user: req.user._id});
-    res.status(200).json(project);
 };
 
 const archiveProject = async (req, res) => {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.id, {isActive: false});
+        const project = await Project.findById(req.params.id).where({user: req.user._id});
         if (!project) {
-            return res.status(404).json({ error: 'Proyecto no encontrado' });
+            handleHttpError(res, 'Project not found', 404);
         }
+        await project.delete(); // Soft delete
         res.status(200).json({ message: 'Proyecto archivado correctamente' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleHttpError(res, 'Error archiving project', 500);
     }
 };
 
 const restoreProject = async (req, res) => {
     try {
-        const project = await Project.findByIdAndUpdate(req.params.id, {isActive: true});
+        const project = await Project.findOneWithDeleted({ _id: req.params.id, user: req.user._id });
         if (!project) {
-            return res.status(404).json({ error: 'Proyecto no encontrado' });
+            handleHttpError(res, 'Project not found', 404);
         }
+        await project.restore();
         res.status(200).json({ message: 'Proyecto restaurado correctamente' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        handleHttpError(res, 'Error restoring project', 500);
     }
 };
 
+const getArchivedProjects = async (req, res) => {
+    try {
+        const projects = await Project.findDeleted({user: req.user._id}).populate('client', 'name email').populate('user', 'name email');
+        res.status(200).json(projects);
+    } catch (error) {
+        handleHttpError(res, 'Error getting archived projects', 500);
+    }
+};
 
-module.exports = { createProject, updateProject, deleteProject, getProjects, getArchivedProjects, getProjectById, archiveProject };
+module.exports = { 
+    createProject, 
+    updateProject, 
+    deleteProject, 
+    getProjects, 
+    getArchivedProjects, 
+    getProjectById, 
+    archiveProject,
+    restoreProject 
+};
