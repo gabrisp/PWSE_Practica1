@@ -10,7 +10,7 @@ const registerMiddleware = async (req, res, next) => {
         // If no existing user, proceed to the next middleware
         next();
     } catch (error) {
-        return handleHttpError(res, 'Usuario ya existe', 500);
+        return handleHttpError(res, 'ERROR_SERVER', 500);
     }
 };
 
@@ -24,7 +24,7 @@ const finishRegisterMiddleware = async (req, res, next) => {
         // Si no hay usuario existente o es el mismo, proceder
         next();
     } catch (error) {
-        return handleHttpError(res, 'Usuario ya existe', 500);
+        return handleHttpError(res, 'ERROR_SERVER', 500);
     }
 }
 
