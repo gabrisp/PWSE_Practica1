@@ -98,9 +98,6 @@ describe('Rutas de Notas de Entrega', () => {
   });
 
   afterEach(async () => {
-    await User.deleteMany({});
-    await Client.deleteMany({});
-    await Project.deleteMany({});
     await DeliveryNote.deleteMany({});
   });
 

@@ -50,7 +50,7 @@ const verifyMiddleware = async (req, res, next) => {
 };
 
 const isActiveUser = async (req, res, next) => {
-
+    console.log("req.user IS ACTIVE USER", req.user);
 	if (req.user.status === 0) {
         return handleHttpError(res, 'Usuario no verificado', 401); // Retornar aquí para evitar llamar a next()
 	}else {

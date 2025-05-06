@@ -29,7 +29,7 @@ describe('Rutas de Proyectos', () => {
     });
     userId = user._id;
     token = tokenSign(user);
-
+    console.log("token", token);
     const client = await Client.create({
       name: 'Test Client',
       email: 'clientproject@example.com',
@@ -46,8 +46,6 @@ describe('Rutas de Proyectos', () => {
   });
 
   afterEach(async () => {
-    await Client.deleteMany({});
-    await User.deleteMany({});
     await Project.deleteMany({});
   });
 
@@ -115,6 +113,7 @@ describe('Rutas de Proyectos', () => {
         client: clientId,
         user: userId
       });
+      console.log("activeProject", activeProject);
       const archivedProject = await Project.create({
         name: 'Archived Project',
         projectCode: 'PRJ003A',
@@ -130,12 +129,14 @@ describe('Rutas de Proyectos', () => {
         client: clientId,
         user: userId
       });
+      console.log("archivedProject", archivedProject);
       await archivedProject.delete();
 
       const res = await request(app)
         .get('/projects')
         .set('Authorization', `Bearer ${token}`);
 
+      console.log("res.body", res.body);
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.some(p => p.email === 'activeproject@example.com')).toBe(true);
@@ -284,6 +285,8 @@ describe('Rutas de Proyectos', () => {
       const res = await request(app)
         .get('/projects/archived')
         .set('Authorization', `Bearer ${token}`);
+
+
       expect(res.statusCode).toBe(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.some(p => p.email === 'archivedproject2@example.com')).toBe(true);

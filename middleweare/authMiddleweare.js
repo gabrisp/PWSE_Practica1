@@ -10,7 +10,7 @@ const authMiddleware = async (req, res, next) => {
         }
 
         const token = req.headers.authorization.split(' ').pop();
-
+        console.log("token", token);
         const dataToken = await verifyToken(token);
 
         if (!dataToken._id) {
@@ -24,6 +24,7 @@ const authMiddleware = async (req, res, next) => {
             return;
         }
         req.user = user;
+        console.log("req.user", req.user);
         next();
         
     } catch (err) {
